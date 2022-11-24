@@ -1,4 +1,6 @@
 
+use std::time::Instant;
+
 use common::input_file_lines;
 
 fn read_first_generation(s: String) -> [i64; 9] {
@@ -10,13 +12,13 @@ fn read_first_generation(s: String) -> [i64; 9] {
     result
 }
 
-fn day(input: &mut [i64; 9]) {
+fn day(input: &mut [i64; 9], birth_timer: usize) {
     let new_gen = input[0];
     for i in 0..8 {
         input[i] = input[i+1];
     }
-    input[6] += new_gen;
-    input[8] = new_gen;
+    input[birth_timer] += new_gen;
+    input[input.len() -1] = new_gen;
 }
 
 fn a() {
@@ -27,7 +29,7 @@ fn a() {
         .expect("invalid population"));
 
     for _ in 0..80 {
-        day(&mut population);
+        day(&mut population, 6);
         // println!("{population:?}");
     }
 
@@ -43,7 +45,7 @@ fn b() {
         .expect("invalid population"));
 
     for _ in 0..256 {
-        day(&mut population);
+        day(&mut population, 6);
         // println!("{population:?}");
     }
 
@@ -52,6 +54,12 @@ fn b() {
 }
 
 fn main() {
+    let start = Instant::now();
     a();
+    let duration = start.elapsed();
+    println!("Time elapsed in a() is: {:?}", duration);
+    let start = Instant::now();
     b();
+    let duration = start.elapsed();
+    println!("Time elapsed in b() is: {:?}", duration);
 }
